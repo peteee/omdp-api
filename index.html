@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OMDb API Demo</title>
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/onsenui.css">
+  <link rel="stylesheet" href="https://unpkg.com/onsenui/css/dark-onsen-css-components.min.css">
+  <script src="https://unpkg.com/onsenui/js/onsenui.min.js"></script>
+  <script>
+    //ons.disableAutoStyling(); //iOS only!!
+    // or
+    //ons.platform.select('android'); // Android only!! 
+  </script>
+  <style>
+    #Tab1 {
+      overflow-y: scroll !important;
+      padding:3px !important;
+    }
+    #Tab2 p, #Tab3 p{ text-align: left !important; padding: 5px;}
+    #my-dialog div.dialog{width: 300px !important; max-height:80%; overflow-y:scroll !important}
+    .movie-poster-detail{width: 100%;float: left;display: block;}
+    #movieDetails{padding-top:458px; color:white;}
+    .movie-poster-detail {
+      width: 100%;
+      display: block;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      max-height: 460px;
+    }
+    ons-search-input input{margin-left: 3px !important;}
+    #Tab1 h2{margin-top:40px}
+    #Tab1 h4{margin:-10px 0;color: black;font-size: 15px}
+    
+    /* dark mode tweaks */
+    .ons-swiper-target.active{background-color:#444;}
+    a, a:active, a:focus{font-weight: bold; color: orange}
+    
+    /* .dialog-mask, .dialog {visibility: hidden} */
+  </style>
+</head>
+<body>
+  <ons-page>
+
+    <ons-toolbar>
+      <div class="center">Movie Info</div>
+      <!-- <ons-page> -->
+        <p style="text-align: center; margin-top: 10px;">
+          <ons-search-input
+            placeholder="Search"
+            onchange="getMovie(this.value); //ons.notification.alert('Searched for: ' + this.value)"
+          ></ons-search-input>
+        </p>
+      <!-- </ons-page> -->
+    </ons-toolbar>
+  
+    <ons-tabbar swipeable position="auto">
+      <ons-tab page="tab1.html" label="Movie Info" icon="md-home" active></ons-tab>
+      <ons-tab page="tab2.html" label="About" icon="fa-address-card" active-icon="fa-user-injured" badge="NEW"></ons-tab>
+      <ons-tab page="tab3.html" label="Contact" icon="md-email" active-icon="md-face"></ons-tab>
+
+    </ons-tabbar>
+  </ons-page>
+  
+  <template id="tab1.html">
+    <ons-page id="Tab1">
+      <p style="text-align: center;">
+        L O A D I N G.....
+      </p>
+    </ons-page>
+  </template>
+  
+  <template id="tab2.html">
+    <ons-page id="Tab2">
+      <p>
+        Find about any movie in this neat little mobile web-app. Just type in the search and tap on the movie posters to learn more about your favourite movies.
+        <br><br>
+        If you see a kitten instead of a movie poster, then the poster isn't available and it loads a kitten via <a href="https://placekitten.com/" target="_blank">placekitten.com</a>.
+        <br><br>
+        Enjoy,<br>
+        Peter
+      </p>
+    </ons-page>
+  </template>
+
+  <template id="tab3.html">
+    <ons-page id="Tab3">
+      <p style="text-align: center;">
+        
+      </p>
+    </ons-page>
+  </template>
+
+
+
+  <template id="dialog.html">
+    <ons-dialog id="my-dialog">
+      <div style="text-align: left; padding: 10px;">
+        <p id="movieDetails">
+          Loading Details...
+        </p>
+  
+        <p>
+          <ons-button onclick="hideDialog('my-dialog')">Close</ons-button>
+        </p>
+      </div>
+    </ons-dialog>
+  </template>
+
+
+  <script>
+    document.addEventListener('prechange', function(event) {
+      document.querySelector('ons-toolbar .center')
+        .innerHTML = event.tabItem.getAttribute('label');
+    });
+
+    function displayMovies(moviedata) {
+      console.log(moviedata);
+      if(moviedata.Response === "False") {
+        ons.notification.alert('Sorry, Movie not found...')
+      } else {
+          
+        let movieStage = document.getElementById("Tab1");
+        let movieInfo = "";
+        for(var i = 0; i < moviedata.Search.length; i++) {
+          console.log(moviedata.Search[i].Title);
+          console.log(moviedata.Search[i].Poster);
+          if(moviedata.Search[i].Poster==="N/A")
+            moviedata.Search[i].Poster = "https://placekitten.com/200/300";
+          
+          movieInfo += "<h2>"+moviedata.Search[i].Title+"</h2><h4>"+moviedata.Search[i].Year+"</h4><p><a href='javascript:getMovieDetails(\""+moviedata.Search[i].imdbID+"\")'><img src='"+ moviedata.Search[i].Poster +"' width='100%' /></a></p>";
+        }
+        (typeof movieInfo !== "undefined") ? movieStage.innerHTML = movieInfo : false;
+      }
+    }
+
+    function getMovie(keywords){
+      // var url = 'https://www.omdbapi.com/?apikey=YOUR-API-KEY&s=star%20wars';
+      var url = 'https://www.omdbapi.com/?apikey=YOUR-API-KEY&s='+keywords;
+      var req = new Request(url);
+      fetch(req)
+      .then(function(response) { return response.json(); })
+      .then(function(data) {
+        displayMovies(data);
+      });
+    }
+    
+    document.addEventListener('init', function(event) {
+      var page = event.target;
+      console.log(page.id)
+      if (page.id === 'Tab1') {
+        getMovie("star wars")
+      }
+      if (page.id === 'Tab3') {
+        document.querySelector("#Tab3 p").innerHTML = "<n uers=\"znvygb:boreynac\100inavre\056pbyyrtr\">boreynac\100inavre\056pbyyrtr<\057n>".replace(/[a-zA-Z]/g, function(c){return String.fromCharCode((c<="Z"?90:122)>=(c=c.charCodeAt(0)+13)?c:c-26);});
+      }
+    });
+
+    var showTemplateDialog = function(moviedata) {
+    var dialog = document.getElementById('my-dialog');
+    if (dialog) {
+      dialog.show();
+      setTimeout(() => {
+        console.log(moviedata)
+        let movieDetails = document.getElementById('movieDetails');
+        let movieDetailText = "";
+
+        for(var i = 0; i < Object.keys(moviedata).length; i++) {
+          if(Object.keys(moviedata)[i]==="Poster")
+            movieDetailText += '<img src="' + ( (Object.values(moviedata)[i]==="N/A") ? "https://placekitten.com/200/300" : Object.values(moviedata)[i])  + '" class="movie-poster-detail" /><br />';
+          if(Object.keys(moviedata)[i]==="imdbID")
+            movieDetailText += '<br /><b><a href="https://www.imdb.com/title/'+Object.values(moviedata)[i] +'/" target="_blank">Check IMDb</a></b><br /><br />';
+          if(Object.keys(moviedata)[i]!=="Ratings" && Object.keys(moviedata)[i]!=="Poster")
+            movieDetailText += "<b>"+Object.keys(moviedata)[i] + ":</b> " + Object.values(moviedata)[i] + "<br />";
+
+        }
+        movieDetails.innerHTML = movieDetailText;
+
+      }, 500);
+
+    
+      } else {
+        ons.createElement('dialog.html', { append: true })
+          .then(function(dialog) {
+            dialog.show();
+
+          });
+      }
+
+    };
+
+    var hideDialog = function(id) {
+      document
+        .getElementById(id)
+        .hide();
+    };
+    
+    //4nn0y1n6 h4ck - otherwise dialog is empty on 1st open attempt
+    showTemplateDialog()
+    setTimeout(() => {
+      hideDialog("my-dialog");      
+    }, 300); 
+
+    function displayMovieDetail(moviedata) {
+      showTemplateDialog(moviedata);
+    };
+
+    function getMovieDetails(id){
+      var url = 'https://www.omdbapi.com/?apikey=YOUR-API-KEY&i='+id;
+      var req = new Request(url);
+      fetch(req)
+      .then(function(response) { return response.json(); })
+      .then(function(data) {
+        displayMovieDetail(data);
+      });
+    }
+  </script>
+
+</body>
+</html>
