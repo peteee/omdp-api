@@ -8,9 +8,10 @@ If you see a kitten instead of a movie poster, then the poster isn't available a
 - Also Uses: https://placekitten.com/
 - Get your free API key: https://omdbapi.com/
 
-![Screen shot 1](https://raw.githubusercontent.com/peteee/omdp-api/main/Screen%20Shot%202021-04-02%20at%2017.07.01.png|width=320px)
+<img src="https://raw.githubusercontent.com/peteee/omdp-api/main/Screen%20Shot%202021-04-02%20at%2017.07.01.png" width="320" alt="Screen shot 1"/>
 
-![Screen shot 2](https://raw.githubusercontent.com/peteee/omdp-api/main/Screen%20Shot%202021-04-02%20at%2017.13.40.png|width=320px)
+<img src="https://raw.githubusercontent.com/peteee/omdp-api/main/Screen%20Shot%202021-04-02%20at%2017.13.40.png" width="320" alt="Screen shot 2"/>
+
 
 
 
